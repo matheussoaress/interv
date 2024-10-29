@@ -31,17 +31,17 @@ describe BooksController, type: :controller do
     it 'should create and return a single book' do
       post :create, params: { book: { title: 'new_title', author: 'My author', publication_year: 2022 } }
       expect(response).to have_http_status(:created)
-      expect(parsed_reponse.dig(:book, :id)).to eq 1
+      expect(parsed_reponse.dig(:book, :id)).to eq 11
       expect(parsed_reponse.dig(:book, :title)).to eq 'new_title'
     end
   end
 
   describe 'DELETE #destroy' do
     it 'should destroy and return a single book' do
-      put :update, params: { id: 1 }
-      expect(response).to have_http_status(:deleted)
+      delete :destroy, params: { id: 1 }
+      expect(response).to have_http_status(:ok)
       expect(parsed_reponse.dig(:book, :id)).to eq 1
-      expect(parsed_reponse.dig(:book, :title)).to eq 'Book 1'
+      expect(parsed_reponse.dig(:book, :title)).to eq 'Title 1'
     end
   end
 end

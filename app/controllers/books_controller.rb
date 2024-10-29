@@ -9,6 +9,7 @@ class BooksController < ApplicationController
 
   def create
     book = Book.new
+    book.id = @books.last.id + 1
     book.title = permitted_params[:title]
     book.author = permitted_params[:author]
     book.publication_year = permitted_params[:publication_year]
@@ -18,32 +19,32 @@ class BooksController < ApplicationController
   end
 
   def destroy
-    book = @books.find { |b| b.id == params[:id] }
+    book = @books.find { |b| b.id == params[:id].to_i }
     raise ActiveRecord::RecordNotFound unless book
 
     @books.delete(book)
-    render json: { book: book }, status: :created
+    render json: { book: book }, status: :ok
   rescue
     render json: { message: 'book not found'}, status: :not_found
   end
 
   def show
-    book = @books.find { |b| b.id == params[:id] }
+    book = @books.find { |b| b.id == params[:id].to_i }
     raise ActiveRecord::RecordNotFound unless book
 
-    render json: { book: book }, status: :created
+    render json: { book: book }, status: :ok
   rescue
     render json: { message: 'book not found'}, status: :not_found
   end
 
   def update
-    book = @books.find { |b| b.id == params[:id] }
+    book = @books.find { |b| b.id == params[:id].to_i }
     raise ActiveRecord::RecordNotFound unless book
     permitted_params.each do |param|
-      instance_variable_set(book, param)
+      book.send("#{param[0].to_sym}=", param[1])
     end
 
-    render json: { book: book }, status: :created
+    render json: { book: book }, status: :ok
   end
 
   private
